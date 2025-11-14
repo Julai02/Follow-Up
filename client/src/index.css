@@ -1,0 +1,15 @@
+:root{
+  --sky: #d9f2ff;
+  --blue: #2b9cff;
+  --white: #ffffff;
+}
+*{box-sizing:border-box;font-family:Inter,Segoe UI,Roboto,'Helvetica Neue',Arial}
+body{margin:0;background:linear-gradient(180deg,var(--sky),#f7fbff);color:#023047}
+.login-page{height:100vh;display:flex;align-items:center;justify-content:center}
+.login-box{background:var(--white);padding:24px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);width:320px}
+.login-box h2{margin:0 0 12px;color:var(--blue)}
+.login-box input{width:100%;padding:10px;margin:8px 0;border:1px solid #e6eef8;border-radius:6px}
+.login-box button{width:100%;padding:10px;margin-top:8px;background:var(--blue);color:var(--white);border:none;border-radius:6px}
+.error{color:#b00020;margin-top:8px}
+.topbar{background:var(--white);padding:12px 16px;border-bottom:1px solid #e6eef8}
+.dashboard main{padding:16px}
