@@ -138,13 +138,8 @@ cd server
 # Install dependencies
 npm install
 
-# Create .env file
-cat > .env << EOF
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/followup?retryWrites=true&w=majority
-JWT_SECRET=your_super_secret_key_12345
-CLIENT_URL=http://localhost:5173
-PORT=5000
-EOF
+# Configure environment variables in .env file
+# (See deployment guide for required variables)
 
 # Run seed script to populate sample data
 npm run seed
@@ -155,6 +150,8 @@ npm run dev
 
 **Backend runs on:** http://localhost:5000
 
+> Environment variables must be configured securely. Refer to deployment documentation.
+
 ### 3. Frontend Setup
 
 ```bash
@@ -163,10 +160,8 @@ cd ../client
 # Install dependencies
 npm install
 
-# Create .env file
-cat > .env.local << EOF
-VITE_API_URL=http://localhost:5000/api
-EOF
+# Configure API URL environment variable
+# (See deployment guide for setup instructions)
 
 # Start development server
 npm run dev
@@ -176,18 +171,12 @@ npm run dev
 
 ## Test Accounts
 
-After running the seed script, use these credentials:
+After running the seed script, test accounts are automatically created. Credentials are displayed in the console output during the seed execution.
 
-**Teachers:**
-- Username: `t_T001` | Password: `teacher123`
-- Username: `t_T002` | Password: `teacher123`
-- Username: `t_T003` | Password: `teacher123`
+- **Parents**: Auto-generated usernames with auto-generated passwords
+- **Teachers**: Auto-generated usernames with auto-generated passwords
 
-**Parents:**
-- Username: `p_P001` | Password: `parent123`
-- Username: `p_P002` | Password: `parent123`
-- Username: `p_P003` | Password: `parent123`
-- Username: `p_P004` | Password: `parent123`
+Check the console output or database for specific login credentials.
 
 ## API Documentation
 
@@ -196,23 +185,10 @@ After running the seed script, use these credentials:
 #### POST /api/auth/login
 Login for both parents and teachers.
 
-**Request:**
-```json
-{
-  "username": "t_T001",
-  "password": "teacher123"
-}
-```
+**Accepts:** Username and password  
+**Returns:** JWT token, user role, and user IDs for authenticated sessions
 
-**Response (200 OK):**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "role": "teacher",
-  "userId": "691abcbc9ff06ced09bfb133",
-  "refId": "691abcbb9ff06ced09bfb12c"
-}
-```
+For detailed API specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 ### Student Endpoints
 
@@ -221,64 +197,21 @@ Get all children for a parent.
 
 **Headers:** `Authorization: Bearer <token>`
 
-**Response (200 OK):**
-```json
-{
-  "children": [
-    {
-      "_id": "691abcbf9ff06ced09bfb149",
-      "name": "Child Name",
-      "grade": "Grade 1",
-      "homeLocation": "123 Street"
-    }
-  ]
-}
-```
+For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 #### GET /api/students/:studentId
 Get detailed student info including academic records.
 
 **Headers:** `Authorization: Bearer <token>`
 
-**Response (200 OK):**
-```json
-{
-  "student": {
-    "_id": "691abcbf9ff06ced09bfb149",
-    "name": "Child Name",
-    "grade": "Grade 1",
-    "homeLocation": "123 Street",
-    "academicRecords": [
-      {
-        "term": "Term 1",
-        "subject": "Mathematics",
-        "score": 85,
-        "remarks": "Good performance"
-      }
-    ],
-    "parentIDs": ["691abcbd9ff06ced09bfb139"]
-  }
-}
-```
+For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 #### PUT /api/students/:studentId
 Update student records (add academic record).
 
 **Headers:** `Authorization: Bearer <token>`
 
-**Request:**
-```json
-{
-  "academicRecords": [
-    {
-      "term": "Term 1",
-      "subject": "Mathematics",
-      "score": 85,
-      "remarks": "Good performance"
-    }
-  ]
-}
-```
+For detailed request/response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 ### Teacher Endpoints
 
@@ -287,63 +220,21 @@ Get all students for a teacher.
 
 **Headers:** `Authorization: Bearer <token>`
 
-**Response (200 OK):**
-```json
-{
-  "students": [
-    {
-      "_id": "691abcbf9ff06ced09bfb149",
-      "name": "Student Name",
-      "grade": "Grade 1"
-    }
-  ]
-}
-```
+For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 #### GET /api/teachers/grade/:grade
 Get all teachers for a specific grade.
 
 **Headers:** `Authorization: Bearer <token>`
 
-**Response (200 OK):**
-```json
-{
-  "teachers": [
-    {
-      "teacher": {
-        "_id": "691abcbb9ff06ced09bfb12c",
-        "name": "Teacher Name",
-        "subject": "Mathematics"
-      },
-      "user": {
-        "_id": "691abcbc9ff06ced09bfb133"
-      }
-    }
-  ]
-}
-```
+For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 #### POST /api/teachers/:teacherId/parent-student
 Create parent and link to student (enforces max 2 parents).
 
 **Headers:** `Authorization: Bearer <token>`
 
-**Request:**
-```json
-{
-  "parentData": {
-    "uniqueID": "P001",
-    "name": "Parent Name",
-    "contact": "+1234567890"
-  },
-  "studentData": {
-    "uniqueID": "S001",
-    "name": "Student Name",
-    "grade": "Grade 1",
-    "homeLocation": "123 Street"
-  }
-}
-```
+For detailed request/response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 ### Message Endpoints
 
@@ -352,104 +243,26 @@ Send a message.
 
 **Headers:** `Authorization: Bearer <token>`
 
-**Request:**
-```json
-{
-  "toUserId": "691abcbc9ff06ced09bfb133",
-  "text": "Hello, how is the child doing?",
-  "studentId": "691abcbf9ff06ced09bfb149"
-}
-```
-
-**Response (200 OK):**
-```json
-{
-  "message": {
-    "_id": "691ad7c2f2895b71789324d4",
-    "fromUser": {
-      "_id": "691abcbd9ff06ced09bfb13b",
-      "username": "p_P001",
-      "role": "parent"
-    },
-    "toUser": {
-      "_id": "691abcbc9ff06ced09bfb133",
-      "username": "t_T001",
-      "role": "teacher"
-    },
-    "text": "Hello, how is the child doing?",
-    "student": "691abcbf9ff06ced09bfb149",
-    "createdAt": "2025-11-17T08:07:30.214Z",
-    "read": false
-  }
-}
-```
+For detailed request/response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 #### GET /api/messages/conversation/:otherUserId
 Get conversation history with another user.
 
 **Headers:** `Authorization: Bearer <token>`
 
-**Response (200 OK):**
-```json
-{
-  "messages": [
-    {
-      "_id": "691ad7c2f2895b71789324d4",
-      "fromUser": {
-        "_id": "691abcbd9ff06ced09bfb13b",
-        "username": "p_P001"
-      },
-      "toUser": {
-        "_id": "691abcbc9ff06ced09bfb133",
-        "username": "t_T001"
-      },
-      "text": "Hello teacher",
-      "createdAt": "2025-11-17T08:07:30.214Z"
-    }
-  ]
-}
-```
+For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
-## Socket.io Events
+## Real-Time Messaging
 
-### Connection
-```javascript
-const socket = io('http://localhost:5000')
+The application uses Socket.io for real-time message delivery between parents and teachers. Messages are instantly delivered when both users are online and stored in the database for offline access.
 
-// Join your user room (allows others to message you)
-socket.emit('join', userId)
-```
+For detailed Socket.io integration specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
-### Receiving Messages
-```javascript
-socket.on('message', (msg) => {
-  console.log('Message received:', msg)
-  // msg contains: { _id, fromUser, toUser, text, createdAt }
-})
-```
+## Deployment Guide
 
-### Server Emit
-When a message is sent via POST /api/messages, the server automatically:
-1. Saves the message to MongoDB
-2. Emits to sender's room (so they see their own message)
-3. Emits to recipient's room (so recipient sees it instantly)
-
-## Environment Variables
-
-### Backend (.env)
-```
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname?retryWrites=true&w=majority
-JWT_SECRET=your_secret_key_here
-CLIENT_URL=http://localhost:5173
-PORT=5000
-```
-
-### Frontend (.env.local)
-```
-VITE_API_URL=http://localhost:5000/api
-```
-
-## Database Schemas
+For complete deployment instructions including environment variable configuration, refer to:
+- **QUICK_DEPLOY.md** - Quick deployment guide
+- **DOCUMENTATION_GUIDE.md** - Full documentation
 
 ### User
 ```javascript
@@ -546,12 +359,11 @@ VITE_API_URL=http://localhost:5000/api
 ### Configure MongoDB Atlas
 
 1. **Create MongoDB Atlas Cluster**: https://www.mongodb.com/cloud/atlas
-2. **Create Database User**: Note username and password
-3. **Get Connection String**: Copy MongoDB URI
-4. **Add to .env**: 
-   ```
-   MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/followup?retryWrites=true&w=majority
-   ```
+2. **Create Database User**: Credentials will be used for connection
+3. **Get Connection String**: Copy the provided connection URI
+4. **Configure in deployment environment**: Add connection string securely to your deployment platform
+
+For detailed setup instructions, refer to QUICK_DEPLOY.md or DOCUMENTATION_GUIDE.md
 
 ## Testing
 
