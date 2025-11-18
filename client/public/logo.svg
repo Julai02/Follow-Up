@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Curved arrow pointing upward -->
+  <defs>
+    <style>
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+      .arrow-path { 
+        stroke: #2b9cff; 
+        stroke-width: 3; 
+        fill: none; 
+        stroke-linecap: round; 
+        stroke-linejoin: round;
+        animation: bounce 2s ease-in-out infinite;
+      }
+      .arrow-head {
+        fill: #2b9cff;
+        animation: bounce 2s ease-in-out infinite;
+      }
+    </style>
+  </defs>
+  <!-- Curved arrow body -->
+  <path class="arrow-path" d="M 50 85 Q 30 65 30 40 Q 30 20 50 15 Q 70 20 70 40" />
+  <!-- Arrow head -->
+  <polygon class="arrow-head" points="50,8 45,18 50,15 55,18" />
+  <!-- Optional: decorative circles -->
+  <circle cx="50" cy="50" r="2" fill="#2b9cff" opacity="0.3" />
+  <circle cx="35" cy="65" r="1.5" fill="#2b9cff" opacity="0.2" />
+  <circle cx="65" cy="65" r="1.5" fill="#2b9cff" opacity="0.2" />
+</svg>

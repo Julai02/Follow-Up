@@ -1,63 +1,63 @@
-# -------------------------
-# Node.js / Express backend
-# -------------------------
+# =========================
+# Follow-Up: project .gitignore
+# Protects secrets, local env, build outputs, IDE files, OS artifacts
+# =========================
+
+# Node modules
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
-.pnpm-debug.log*
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Logs
-logs
-*.log
-*.out
-*.err
-
-# Coverage reports
-coverage/
-*.lcov
-
-# -------------------------
-# React frontend
-# -------------------------
-# Dependencies
+server/node_modules/
 client/node_modules/
 
 # Build output
-client/build/
+/dist/
+/build/
 client/dist/
+client/build/
 
-# Testing
-client/coverage/
+# Vite cache / local dev
+.vite/
+.turbo/
 
-# -------------------------
-# OS / Editor junk
-# -------------------------
+# Environment files (do NOT commit secrets)
+.env
+.env.*
+client/.env*
+server/.env*
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS junk
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Icon?
 *.swp
 *.swo
-*.tmp
 
-# VS Code
+# Editors/IDEs
 .vscode/
-.history/
-
-# JetBrains IDEs
 .idea/
+.history/
+/.env.local
 
-# -------------------------
-# Miscellaneous
-# -------------------------
-# Compiled binaries
+# Coverage
+coverage/
+client/coverage/
+
+# Test output
+.nyc_output/
+jest.config.js
+
+# Dependency directories
+/.pnp/
+.pnp.js
+
+# Misc binaries
 *.exe
 *.dll
 *.so
@@ -68,6 +68,38 @@ Thumbs.db
 *.tar
 *.gz
 *.rar
+*.tmp
 
-# MongoDB dump files
+# Certificates and keys
+*.pem
+*.key
+*.crt
+
+# Database dumps and local DB files
 dump/
+*.dump
+*.bak
+
+# Generated files
+.DS_Store
+Thumbs.db
+
+# System files
+desktop.ini
+
+# Documentation guides and personal notes (optional)
+DOCUMENTATION_GUIDE.md
+CHANGES_DAY7.md
+DEPLOYMENT_READY.md
+IMAGE_INTEGRATION.md
+TESTING_GUIDE.md
+THESIS_DOCUMENT.docx
+MESSAGING_BUG_FIX.md
+PRE_DEPLOYMENT_CHECKLIST.md
+QUICK_DEPLOY.md
+
+
+# Optional: lockfiles
+# It's recommended to commit lockfiles (package-lock.json / yarn.lock) for reproducible builds.
+# If you prefer committing, ensure they are NOT in .gitignore. Currently we do NOT ignore lockfiles.
+
