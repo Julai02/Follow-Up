@@ -117,57 +117,6 @@ Follow-Up/
 - **Enter-to-Send**: Press Enter to send, Shift+Enter for new line
 - **Read Status**: Track message delivery (ready for expansion)
 
-## Installation & Setup
-
-### Prerequisites
-- **Node.js** v16+ and npm/yarn
-- **MongoDB Atlas** account (free tier available)
-- **Git** for version control
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/Julai02/Follow-Up.git
-cd Follow-Up
-```
-
-### 2. Backend Setup
-
-```bash
-cd server
-
-# Install dependencies
-npm install
-
-# Configure environment variables in .env file
-# (See deployment guide for required variables)
-
-# Run seed script to populate sample data
-npm run seed
-
-# Start development server
-npm run dev
-```
-
-**Backend runs on:** http://localhost:5000
-
-> Environment variables must be configured securely. Refer to deployment documentation.
-
-### 3. Frontend Setup
-
-```bash
-cd ../client
-
-# Install dependencies
-npm install
-
-# Configure API URL environment variable
-# (See deployment guide for setup instructions)
-
-# Start development server
-npm run dev
-```
-
-**Frontend runs on:** http://localhost:5173
 
 ## Test Accounts
 
@@ -188,7 +137,7 @@ Login for both parents and teachers.
 **Accepts:** Username and password  
 **Returns:** JWT token, user role, and user IDs for authenticated sessions
 
-For detailed API specifications, refer to the DOCUMENTATION_GUIDE.md file.
+
 
 ### Student Endpoints
 
@@ -197,21 +146,20 @@ Get all children for a parent.
 
 **Headers:** `Authorization: Bearer <token>`
 
-For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 #### GET /api/students/:studentId
 Get detailed student info including academic records.
 
 **Headers:** `Authorization: Bearer <token>`
 
-For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
+
 
 #### PUT /api/students/:studentId
 Update student records (add academic record).
 
 **Headers:** `Authorization: Bearer <token>`
 
-For detailed request/response specifications, refer to the DOCUMENTATION_GUIDE.md file.
+
 
 ### Teacher Endpoints
 
@@ -220,21 +168,19 @@ Get all students for a teacher.
 
 **Headers:** `Authorization: Bearer <token>`
 
-For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 #### GET /api/teachers/grade/:grade
 Get all teachers for a specific grade.
 
 **Headers:** `Authorization: Bearer <token>`
 
-For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
+
 
 #### POST /api/teachers/:teacherId/parent-student
 Create parent and link to student (enforces max 2 parents).
 
 **Headers:** `Authorization: Bearer <token>`
 
-For detailed request/response specifications, refer to the DOCUMENTATION_GUIDE.md file.
 
 ### Message Endpoints
 
@@ -243,26 +189,19 @@ Send a message.
 
 **Headers:** `Authorization: Bearer <token>`
 
-For detailed request/response specifications, refer to the DOCUMENTATION_GUIDE.md file.
+
 
 #### GET /api/messages/conversation/:otherUserId
 Get conversation history with another user.
 
 **Headers:** `Authorization: Bearer <token>`
 
-For detailed response specifications, refer to the DOCUMENTATION_GUIDE.md file.
+
 
 ## Real-Time Messaging
 
 The application uses Socket.io for real-time message delivery between parents and teachers. Messages are instantly delivered when both users are online and stored in the database for offline access.
 
-For detailed Socket.io integration specifications, refer to the DOCUMENTATION_GUIDE.md file.
-
-## Deployment Guide
-
-For complete deployment instructions including environment variable configuration, refer to:
-- **QUICK_DEPLOY.md** - Quick deployment guide
-- **DOCUMENTATION_GUIDE.md** - Full documentation
 
 ### User
 ```javascript
@@ -328,42 +267,6 @@ For complete deployment instructions including environment variable configuratio
 }
 ```
 
-## Deployment Guide
-
-### Deploy Backend to Render
-
-1. **Create Render Account**: https://render.com
-2. **Create New Web Service**:
-   - Connect GitHub repo (Julai02/Follow-Up)
-   - Runtime: Node
-   - Build Command: `cd server && npm install`
-   - Start Command: `node src/index.js`
-3. **Add Environment Variables**:
-   - MONGO_URI: (from MongoDB Atlas)
-   - JWT_SECRET: (create secure key)
-   - CLIENT_URL: (your Vercel frontend URL)
-   - PORT: 5000
-4. **Deploy**: Render auto-deploys on push to main
-
-### Deploy Frontend to Vercel
-
-1. **Create Vercel Account**: https://vercel.com
-2. **Import Project**:
-   - Select Follow-Up repo
-   - Framework: Vite
-   - Root Directory: `client`
-3. **Add Environment Variables**:
-   - VITE_API_URL: (your Render backend URL)
-4. **Deploy**: Vercel auto-deploys on push to main
-
-### Configure MongoDB Atlas
-
-1. **Create MongoDB Atlas Cluster**: https://www.mongodb.com/cloud/atlas
-2. **Create Database User**: Credentials will be used for connection
-3. **Get Connection String**: Copy the provided connection URI
-4. **Configure in deployment environment**: Add connection string securely to your deployment platform
-
-For detailed setup instructions, refer to QUICK_DEPLOY.md or DOCUMENTATION_GUIDE.md
 
 ## Testing
 
