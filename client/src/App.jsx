@@ -9,8 +9,22 @@ export default function App(){
   const [userId, setUserId] = useState(null)
   const [refId, setRefId] = useState(null)
 
-  if(!role) return <Login onLogin={(r, id, ref)=>{ setRole(r); setUserId(id); setRefId(ref); }} />
-  if(role === 'parent') return <ParentDashboard userId={userId} parentId={refId} />
-  if(role === 'teacher') return <TeacherDashboard userId={userId} teacherId={refId} />
+  const onLogin = (r, id, ref) => {
+    setRole(r)
+    setUserId(id)
+    setRefId(ref)
+  }
+
+  const onLogout = ()=>{
+    // Clear token and reset app state to show login
+    localStorage.removeItem('token')
+    setRole(null)
+    setUserId(null)
+    setRefId(null)
+  }
+
+  if(!role) return <Login onLogin={onLogin} />
+  if(role === 'parent') return <ParentDashboard userId={userId} parentId={refId} onLogout={onLogout} />
+  if(role === 'teacher') return <TeacherDashboard userId={userId} teacherId={refId} onLogout={onLogout} />
   return <div>Unknown role</div>
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { api, API_BASE } from '../lib/api'
 import { io } from 'socket.io-client'
 
-export default function ParentDashboard({ userId, parentId }){
+export default function ParentDashboard({ userId, parentId, onLogout }){
   const [children, setChildren] = useState([])
   const [selectedChild, setSelectedChild] = useState(null)
   const [studentDetails, setStudentDetails] = useState(null)
@@ -133,9 +133,22 @@ export default function ParentDashboard({ userId, parentId }){
     }
   }
 
+  const logout = ()=>{
+    try{ localStorage.removeItem('token') }catch(e){}
+    if(typeof onLogout === 'function') onLogout()
+    else window.location.reload()
+  }
+
   return (
     <div className="dashboard">
-      <header className="topbar">Parent Dashboard</header>
+      <header className="topbar">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div>Parent Dashboard</div>
+          <div>
+            <button onClick={logout} style={{background:'transparent',color:'var(--blue)',border:'1px solid var(--border-gray)',padding:'8px 10px',borderRadius:6}}>Logout</button>
+          </div>
+        </div>
+      </header>
       <main style={{display:'flex',gap:16}}>
         <section style={{width:240}}>
           <h3>Your Children</h3>

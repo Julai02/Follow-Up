@@ -196,6 +196,12 @@ body{
   color: #0f7dd6;
 }
 
+.login-box .copyright {
+  opacity: 0.8;
+  color: #475569;
+  font-size: 12px;
+}
+
 /* Dashboard Layout */
 .dashboard {
   display: flex;

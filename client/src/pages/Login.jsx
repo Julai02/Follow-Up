@@ -44,6 +44,9 @@ export default function Login({ onLogin }){
             📄 Download Project Thesis
           </a>
         </div>
+        <div className="copyright" style={{marginTop:12,textAlign:'center',fontSize:12,color:'#9aa'}}>
+          © {new Date().getFullYear()} Holliness Julai Mwawasi
+        </div>
       </form>
     </div>
   )

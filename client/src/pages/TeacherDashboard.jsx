@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { api, API_BASE } from '../lib/api'
 import { io } from 'socket.io-client'
 
-export default function TeacherDashboard({ userId, teacherId }){
+export default function TeacherDashboard({ userId, teacherId, onLogout }){
   const [students, setStudents] = useState([])
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [studentDetails, setStudentDetails] = useState(null)
@@ -153,9 +153,22 @@ export default function TeacherDashboard({ userId, teacherId }){
     }catch(err){ console.error(err); alert(err?.response?.data?.message || 'Error') }
   }
 
+  const logout = ()=>{
+    try{ localStorage.removeItem('token') }catch(e){}
+    if(typeof onLogout === 'function') onLogout()
+    else window.location.reload()
+  }
+
   return (
     <div className="dashboard">
-      <header className="topbar">Teacher Dashboard</header>
+      <header className="topbar">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div>Teacher Dashboard</div>
+          <div>
+            <button onClick={logout} style={{background:'transparent',color:'var(--blue)',border:'1px solid var(--border-gray)',padding:'8px 10px',borderRadius:6}}>Logout</button>
+          </div>
+        </div>
+      </header>
       <main style={{display:'flex',gap:16}}>
         <aside style={{width:280}}>
           <h3>Your Students</h3>
