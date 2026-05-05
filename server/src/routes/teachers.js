@@ -17,10 +17,11 @@ router.post('/', async (req, res) => {
     const password = (Math.random() + 1).toString(36).substring(7);
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({ role: 'teacher', username, password: hash, refId: teacher._id, roleRef: 'Teacher' });
-    res.json({ teacher, credentials: { username, password } });
+    res.json({ teacher, credentials: { username, password: 'PASSWORD_HIDDEN_FOR_SECURITY' } });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error creating teacher' });
+    console.error('Error creating teacher:', err);
+    if (err.code === 11000) return res.status(400).json({ message: 'Teacher ID already exists' });
+    res.status(500).json({ message: 'Error creating teacher: ' + err.message });
   }
 });
 
@@ -69,22 +70,37 @@ router.post('/:teacherId/add-parent-student', auth(['teacher']), async (req, res
       res.json({ message: 'Parent and student created', parent: parentDoc, student: studentDoc, credentials: { username, password } });
     }
   } catch (err) {
-    console.error(err);
-    if (err.message.includes('duplicate')) return res.status(400).json({ message: 'Parent already exists' });
-    res.status(500).json({ message: 'Error creating parent/student' });
+    console.error('Error creating parent/student:', err);
+    if (err.code === 11000) return res.status(400).json({ message: 'Student ID or parent already exists' });
+    if (err.message.includes('duplicate')) return res.status(400).json({ message: 'Parent or student already exists' });
+    if (err.message.includes('validation')) return res.status(400).json({ message: 'Invalid data format: ' + err.message });
+    res.status(500).json({ message: 'Error creating parent/student: ' + err.message });
   }
 });
 
-// Get students for a teacher's grade
+// Get students for a teacher's grade (with parent user IDs for messaging)
 router.get('/:teacherId/students', auth(['teacher']), async (req, res) => {
   try {
     const teacher = await Teacher.findById(req.params.teacherId);
     if (!teacher) return res.status(404).json({ message: 'Teacher not found' });
     const students = await Student.find({ grade: teacher.grade }).populate('parentIDs');
-    res.json({ students });
+    
+    // Enrich each student with parent user IDs for messaging
+    const enrichedStudents = await Promise.all(students.map(async (student) => {
+      const enrichedParents = await Promise.all(student.parentIDs.map(async (parent) => {
+        const user = await User.findOne({ refId: parent._id, roleRef: 'Parent' }).select('_id');
+        return { ...parent.toObject(), userId: user?._id };
+      }));
+      const enrichedStudent = student.toObject();
+      enrichedStudent.parentIDs = enrichedParents;
+      return enrichedStudent;
+    }));
+    
+    res.json({ students: enrichedStudents });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching teacher students:', err);
+    if (err.message.includes('Cast to ObjectId failed')) return res.status(400).json({ message: 'Invalid teacher ID format' });
+    res.status(500).json({ message: 'Failed to load students: ' + err.message });
   }
 });
 
@@ -97,8 +113,9 @@ router.get('/:teacherId', auth(['teacher', 'parent']), async (req, res) => {
     const user = await User.findOne({ refId: teacher._id, roleRef: 'Teacher' }).select('_id username');
     res.json({ teacher, user });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching teacher details:', err);
+    if (err.message.includes('Cast to ObjectId failed')) return res.status(400).json({ message: 'Invalid teacher ID format' });
+    res.status(500).json({ message: 'Failed to load teacher: ' + err.message });
   }
 });
 
@@ -107,15 +124,19 @@ router.get('/grade/:grade', auth(['teacher','parent']), async (req, res) => {
   try {
     const grade = req.params.grade;
     const teachers = await Teacher.find({ grade });
-    // attach user id for each teacher
+    // Attach user id and format for messaging
     const results = await Promise.all(teachers.map(async (t) => {
       const user = await User.findOne({ refId: t._id, roleRef: 'Teacher' }).select('_id username');
-      return { teacher: t, user };
+      return { 
+        teacher: t.toObject(), 
+        userId: user?._id,
+        user: { _id: user?._id, username: user?.username }
+      };
     }));
     res.json({ teachers: results });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching teachers by grade:', err);
+    res.status(500).json({ message: 'Failed to load teachers: ' + err.message });
   }
 });
 

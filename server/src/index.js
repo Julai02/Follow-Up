@@ -18,16 +18,81 @@ const io = socketio(server, {
 // Pass io to message routes for emit on POST
 messageRoutes.setIO(io);
 
+// Store active users for tracking
+const activeUsers = {};
+
 io.on('connection', (socket) => {
   console.log('\n✅ Socket.io connected:', socket.id);
+  
   socket.on('join', (userId) => {
     socket.join(userId);
+    activeUsers[userId] = socket.id;
     console.log(`  User ${userId} joined room`);
+    // Broadcast user is online
+    io.emit('userOnline', { userId, socketId: socket.id });
   });
+
+  // Typing indicators
   socket.on('typing', (data) => {
-    if (data.toUserId) io.to(data.toUserId).emit('userTyping', { fromUserId: data.fromUserId });
+    if (data.toUserId) {
+      io.to(data.toUserId).emit('userTyping', { 
+        fromUserId: data.fromUserId,
+        fromName: data.fromName 
+      });
+    }
   });
-  socket.on('disconnect', () => { console.log('  Socket disconnected:', socket.id); });
+
+  socket.on('stopTyping', (data) => {
+    if (data.toUserId) {
+      io.to(data.toUserId).emit('userStoppedTyping', { 
+        fromUserId: data.fromUserId 
+      });
+    }
+  });
+
+  // New message notifications
+  socket.on('messageAlert', (data) => {
+    if (data.toUserId) {
+      io.to(data.toUserId).emit('newMessageAlert', { 
+        fromUserId: data.fromUserId,
+        fromName: data.fromName,
+        message: data.message 
+      });
+    }
+  });
+
+  // Daily updates notifications
+  socket.on('dailyUpdateNotification', (data) => {
+    const grade = data.grade;
+    // Notify all users interested in this grade
+    io.emit('dailyUpdatePosted', {
+      gradeId: grade,
+      title: data.title,
+      teacher: data.teacher
+    });
+  });
+
+  // Grade space notifications
+  socket.on('gradeSpaceNotification', (data) => {
+    const grade = data.grade;
+    io.emit('gradeSpaceUpdated', {
+      gradeId: grade,
+      title: data.title,
+      teacher: data.teacher
+    });
+  });
+
+  socket.on('disconnect', () => { 
+    // Remove user from active users
+    for (const [userId, socketId] of Object.entries(activeUsers)) {
+      if (socketId === socket.id) {
+        delete activeUsers[userId];
+        io.emit('userOffline', { userId });
+        break;
+      }
+    }
+    console.log('  Socket disconnected:', socket.id);
+  });
 });
 
 server.listen(PORT, () => console.log(`\n🚀 Server running on port ${PORT}`));
@@ -48,18 +113,3 @@ server.on('error', (err) => {
   process.exit(1);
 });
 
-// Improved error handling for common issues (e.g. port in use)
-server.on('error', (err) => {
-  if (err && err.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} is already in use. This usually means another server is running on that port (nodemon or another Node process).`);
-    console.error('To fix: stop the process using that port or start this server on a different port.');
-    console.error('On Windows PowerShell you can run:');
-    console.error('  netstat -ano | findstr :5000');
-    console.error('  taskkill /PID <PID_FROM_PREVIOUS_COMMAND> /F');
-    console.error('Or run the server on a different port for this session:');
-    console.error('  $env:PORT="5001"; npm run dev');
-    process.exit(1);
-  }
-  console.error('Server error:', err);
-  process.exit(1);
-});

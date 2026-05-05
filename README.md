@@ -4,7 +4,7 @@ Site-Link: https://follow-up-tau.vercel.app
 
 ## Overview
 
-**Follow-Up** is a modern web-based platform designed to streamline communication between parents and teachers in educational institutions. The application enables instant messaging, student record management, and seamless information sharing between school staff and parents.
+**Follow-Up** is a modern web-based platform designed to streamline communication between parents and teachers in educational institutions. The application enables instant messaging, student record management, event scheduling, and seamless information sharing between school staff and parents.
 
 ## Problem Statement
 
@@ -14,10 +14,12 @@ Traditional communication channels between parents and teachers are often fragme
 - Physical notes are easily lost
 - No centralized record of academic progress
 - Lack of real-time updates on student performance
+- Difficulty coordinating school events and activities
 
 Follow-Up solves these challenges by providing:
 ✅ **Real-time messaging** between parents and teachers  
 ✅ **Centralized student records** accessible to relevant parties  
+✅ **Event scheduling and calendar integration** for school activities
 ✅ **Role-based access control** for security and privacy  
 ✅ **Instant notifications** via Socket.io for immediate communication  
 ✅ **User-friendly interface** accessible on desktop and mobile  
@@ -28,6 +30,7 @@ Follow-Up solves these challenges by providing:
 - **React 18** with Vite for fast development
 - **Socket.io-client** for real-time messaging
 - **Axios** for HTTP API requests
+- **react-calendar** for event scheduling interface
 - **CSS3** with responsive mobile design
 
 ### Backend
@@ -51,7 +54,11 @@ Follow-Up/
 │   │   ├── pages/
 │   │   │   ├── Login.jsx           # Authentication page
 │   │   │   ├── ParentDashboard.jsx # Parent interface
-│   │   │   └── TeacherDashboard.jsx# Teacher interface
+│   │   │   ├── TeacherDashboard.jsx# Teacher interface
+│   │   │   └── Chat.jsx            # Real-time messaging interface
+│   │   ├── components/
+│   │   │   ├── Calendar.jsx        # Event scheduling component
+│   │   │   └── ErrorBoundary.jsx   # Error handling
 │   │   ├── lib/
 │   │   │   └── api.js              # Axios HTTP client with auth
 │   │   ├── App.jsx                 # Main app component
@@ -73,12 +80,14 @@ Follow-Up/
 │   │   │   ├── Student.js          # Student info & records
 │   │   │   ├── Parent.js           # Parent profile
 │   │   │   ├── Teacher.js          # Teacher profile
-│   │   │   └── Message.js          # Messages between users
+│   │   │   ├── Message.js          # Messages between users
+│   │   │   └── Event.js            # School events and activities
 │   │   ├── routes/
 │   │   │   ├── auth.js             # POST /auth/login
 │   │   │   ├── messages.js         # Message CRUD & Socket.io emit
 │   │   │   ├── students.js         # Student management
 │   │   │   ├── teachers.js         # Teacher management
+│   │   │   ├── events.js           # Event management
 │   │   │   └── users.js            # User lookup by refId
 │   │   └── scripts/
 │   │       └── seed.js             # Sample data initialization
@@ -92,7 +101,7 @@ Follow-Up/
 
 ### Authentication
 - **Unified Login System**: Single login endpoint for both parents and teachers
-- **JWT Tokens**: Secure token-based authentication
+- **JWT Tokens**: Secure token-based authentication with enhanced middleware
 - **Role-Based Access**: Parents see child dashboards; teachers see class management
 - **Password Security**: bcryptjs hashing with salt rounds = 10
 
@@ -101,18 +110,30 @@ Follow-Up/
 - **Select Child**: Switch between different children to view details
 - **Academic Records**: View student's term-by-term academic performance
 - **Class Teachers**: See all teachers for the child's grade level
+- **Event Calendar**: View school events relevant to their children
 - **Real-Time Messaging**: Send and receive instant messages to/from teachers
 - **Message History**: Access previous conversations
 
 ### Teacher Dashboard
 - **Manage Students**: View all students in your grade level
 - **Student Records**: Add and update academic performance records
+- **Event Management**: Create and manage school events with visibility controls
 - **Add Students**: Create new parent-student pairs (enforces max 2 parents per student)
 - **Parent Communication**: Message parents about specific students
 - **Create Accounts**: Generate credentials for new parents
 
+### Event Management System
+- **Calendar Interface**: Interactive calendar for viewing school events
+- **Event Creation**: Teachers can create events with customizable visibility
+- **Visibility Controls**: Public, grade-specific, or private event visibility
+- **Event Types**: Support for meetings, exams, holidays, and activities
+- **Role-Based Permissions**: Teachers create events, parents view relevant events
+
 ### Real-Time Messaging
 - **Instant Delivery**: Socket.io ensures messages arrive instantly
+- **Enhanced Chat UI**: Partner name displayed prominently in top-right header
+- **Message Bubble Improvements**: Wider bubbles (90% width) with clear sender/receiver separation
+- **Sender Identification**: Names displayed above received messages
 - **Conversation History**: Load previous messages when opening chat
 - **Message Timestamps**: See when each message was sent
 - **Auto-scroll**: Automatically scrolls to latest message
@@ -139,8 +160,6 @@ Login for both parents and teachers.
 **Accepts:** Username and password  
 **Returns:** JWT token, user role, and user IDs for authenticated sessions
 
-
-
 ### Student Endpoints
 
 #### GET /api/students/parent/:parentId
@@ -148,20 +167,15 @@ Get all children for a parent.
 
 **Headers:** `Authorization: Bearer <token>`
 
-
 #### GET /api/students/:studentId
 Get detailed student info including academic records.
 
 **Headers:** `Authorization: Bearer <token>`
 
-
-
 #### PUT /api/students/:studentId
 Update student records (add academic record).
 
 **Headers:** `Authorization: Bearer <token>`
-
-
 
 ### Teacher Endpoints
 
@@ -170,19 +184,38 @@ Get all students for a teacher.
 
 **Headers:** `Authorization: Bearer <token>`
 
-
 #### GET /api/teachers/grade/:grade
 Get all teachers for a specific grade.
 
 **Headers:** `Authorization: Bearer <token>`
-
-
 
 #### POST /api/teachers/:teacherId/parent-student
 Create parent and link to student (enforces max 2 parents).
 
 **Headers:** `Authorization: Bearer <token>`
 
+### Event Endpoints
+
+#### GET /api/events
+Get events visible to the authenticated user based on role and visibility settings.
+
+**Headers:** `Authorization: Bearer <token>`
+
+#### POST /api/events
+Create a new event (teachers only).
+
+**Headers:** `Authorization: Bearer <token>`  
+**Accepts:** title, description, date, startTime, endTime, type, visibility, grade, studentIds
+
+#### PUT /api/events/:eventId
+Update an existing event (event creator only).
+
+**Headers:** `Authorization: Bearer <token>`
+
+#### DELETE /api/events/:eventId
+Delete an event (event creator only).
+
+**Headers:** `Authorization: Bearer <token>`
 
 ### Message Endpoints
 
@@ -190,8 +223,6 @@ Create parent and link to student (enforces max 2 parents).
 Send a message.
 
 **Headers:** `Authorization: Bearer <token>`
-
-
 
 #### GET /api/messages/conversation/:otherUserId
 Get conversation history with another user.
@@ -269,6 +300,30 @@ The application uses Socket.io for real-time message delivery between parents an
 }
 ```
 
+### Event
+```javascript
+{
+  title: String (required),
+  description: String,
+  date: Date (required),
+  startTime: String,
+  endTime: String,
+  type: String (enum: ['meeting', 'exam', 'holiday', 'activity'], required),
+  visibility: String (enum: ['public', 'grade', 'private'], default: 'public'),
+  grade: String,
+  studentIds: [ObjectId],
+  createdBy: {
+    userId: ObjectId (required),
+    userType: String (enum: ['teacher', 'parent'], required),
+    name: String (required)
+  },
+  teacherId: ObjectId,
+  parentId: ObjectId,
+  createdAt: Date (default: now),
+  updatedAt: Date (default: now)
+}
+```
+
 
 ## Testing
 
@@ -285,6 +340,7 @@ The application uses Socket.io for real-time message delivery between parents an
 - [ ] Select child and view details
 - [ ] See academic records
 - [ ] View teachers for child's grade
+- [ ] View relevant events on calendar
 - [ ] Send message to teacher
 - [ ] Receive message from teacher
 - [ ] Message history loads correctly
@@ -292,18 +348,36 @@ The application uses Socket.io for real-time message delivery between parents an
 **Teacher Features:**
 - [ ] View list of students in grade
 - [ ] Add academic record to student
+- [ ] Create school events
+- [ ] Set event visibility controls
 - [ ] Create parent and student pair
 - [ ] Message parent about student
 - [ ] Receive message from parent
 
+**Event Management:**
+- [ ] Teachers can create events
+- [ ] Event validation works (required fields)
+- [ ] Event visibility filtering works
+- [ ] Calendar displays events correctly
+- [ ] Parents see relevant events only
+
 **Real-Time Messaging:**
 - [ ] Messages delivered instantly
+- [ ] Partner name displays in top-right header
+- [ ] Message bubbles are wide enough (90% width)
+- [ ] Sender names appear above received messages
 - [ ] Message timestamps display correctly
 - [ ] Switching conversations works
 - [ ] Enter to send works
 - [ ] Old conversation messages load on reopen
 
 ## Known Issues & Future Improvements
+
+### Recently Fixed Issues ✅
+- [x] Event creation authentication errors (createdBy.userId validation)
+- [x] Message bubbles too narrow for text readability
+- [x] Partner name not prominently displayed in chat header
+- [x] Database lookup inconsistencies in event routes
 
 ### Known Issues
 - [ ] Messaging sender identification needs refinement on localhost
@@ -321,6 +395,9 @@ The application uses Socket.io for real-time message delivery between parents an
 - [ ] Multi-language support
 - [ ] Parent notification preferences
 - [ ] Teacher calendar scheduling
+- [ ] Event attendance tracking
+- [ ] Bulk messaging for teachers
+- [ ] Advanced event filtering and search
 
 ## Support & Contact
 
@@ -335,9 +412,9 @@ MIT License - See LICENSE file for details
 
 ## Conclusion
 
-Follow-Up is a scalable, production-ready solution for bridging the communication gap between parents and teachers. Built with modern technologies and deployed on free-tier services, it demonstrates full-stack web development capabilities and real-world problem-solving.
+Follow-Up is a scalable, production-ready solution for bridging the communication gap between parents and teachers. Built with modern technologies and deployed on free-tier services, it demonstrates full-stack web development capabilities and real-world problem-solving. The platform now includes comprehensive event management alongside real-time messaging and student record management.
 
 ---
 
-**Last Updated**: November 17, 2025  
-**Version**: 1.0.0 MVP
+**Last Updated**: May 5, 2026  
+**Version**: 1.1.0 Enhanced

@@ -1,0 +1,425 @@
+/* Parent Dashboard Styles */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.topbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.topbar button {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.topbar button:hover {
+  background: white;
+  color: #667eea;
+}
+
+main {
+  display: flex;
+  gap: 20px;
+  padding: 2rem;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Sidebar */
+aside {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+aside h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: #333;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 0.5rem;
+}
+
+aside ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+aside li {
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.5rem;
+  background: #f9f9f9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  color: #333;
+  border-left: 3px solid transparent;
+}
+
+aside li:hover {
+  background: #eef5ff;
+  border-left-color: #667eea;
+  transform: translateX(4px);
+}
+
+/* Main Content Section */
+section {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+section h2 {
+  color: #333;
+  font-size: 1.8rem;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #667eea;
+}
+
+section h3 {
+  color: #333;
+  font-size: 1.3rem;
+  margin: 1.5rem 0 1rem 0;
+  cursor: default;
+}
+
+section h4 {
+  color: #555;
+  font-size: 1rem;
+  margin: 1rem 0 0.8rem 0;
+  font-weight: 600;
+}
+
+section p {
+  color: #666;
+  line-height: 1.5;
+  margin: 0.5rem 0;
+}
+
+section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 1rem 0;
+}
+
+section li {
+  padding: 0.5rem 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Teachers/Parents Grid */
+.teacher-card,
+.parent-card {
+  border: 1px solid #e6eef8;
+  padding: 1.2rem;
+  border-radius: 8px;
+  background: #fafbfc;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.teacher-card:hover,
+.parent-card:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  transform: translateY(-2px);
+}
+
+.teacher-card > div:first-child,
+.parent-card > div:first-child {
+  margin-bottom: 0.8rem;
+}
+
+.teacher-card strong,
+.parent-card strong {
+  color: #333;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.teacher-card div,
+.parent-card div {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.4rem;
+}
+
+/* Grade Features Buttons */
+.grade-features-buttons {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.grade-features-buttons button {
+  flex: 1;
+  padding: 0.75rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.grade-features-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.grade-features-buttons button:first-child {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.grade-features-buttons button:last-child {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+/* Message Buttons */
+.message-btn,
+section button {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: var(--blue, #667eea);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-bottom: 0.6rem;
+}
+
+.message-btn:hover,
+section button:hover {
+  background: var(--blue-dark, #764ba2);
+  transform: translateY(-1px);
+}
+
+/* Messages Container */
+.message-input-area {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.message-input-area input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.message-input-area input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.message-input-area button {
+  padding: 0.8rem 1.5rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.message-input-area button:hover {
+  background: #764ba2;
+}
+
+/* Messages */
+.message {
+  display: flex;
+  margin-bottom: 0.8rem;
+}
+
+.message .bubble {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.message .bubble-header {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.message .bubble-time {
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 0.3rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  main {
+    gap: 16px;
+    padding: 1.5rem;
+  }
+
+  aside {
+    width: 200px;
+  }
+
+  section {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 1rem 1.5rem;
+  }
+
+  main {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  aside {
+    position: static;
+    width: 100%;
+  }
+
+  section {
+    padding: 1.5rem;
+  }
+
+  section h2 {
+    font-size: 1.4rem;
+  }
+
+  .grade-features-buttons {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .grade-features-buttons button {
+    padding: 0.8rem 1rem;
+  }
+
+  .message-btn,
+  section button {
+    padding: 0.8rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0.8rem 1rem;
+  }
+
+  .topbar > div {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .topbar button {
+    width: 100%;
+  }
+
+  main {
+    padding: 0.8rem;
+    gap: 0.8rem;
+  }
+
+  aside {
+    padding: 1rem;
+  }
+
+  aside h3 {
+    font-size: 1rem;
+  }
+
+  aside li {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  section {
+    padding: 1rem;
+  }
+
+  section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  section h3 {
+    font-size: 1rem;
+  }
+
+  section h4 {
+    font-size: 0.9rem;
+  }
+
+  .teacher-card,
+  .parent-card {
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .message-input-area {
+    gap: 0.5rem;
+  }
+
+  .message-input-area input {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .message {
+    max-width: 100%;
+  }
+
+  .message .bubble {
+    max-width: 90%;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}

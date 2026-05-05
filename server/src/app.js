@@ -5,6 +5,11 @@ const teacherRoutes = require('./routes/teachers');
 const studentRoutes = require('./routes/students');
 const messageRoutes = require('./routes/messages');
 const usersRoutes = require('./routes/users');
+const profileRoutes = require('./routes/profile');
+const dailyUpdatesRoutes = require('./routes/dailyUpdates');
+const gradeSpaceRoutes = require('./routes/gradeSpace');
+const adminRoutes = require('./routes/admin');
+const eventsRoutes = require('./routes/events');
 
 const app = express();
 
@@ -22,6 +27,11 @@ app.use('/api/teachers', teacherRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/daily-updates', dailyUpdatesRoutes);
+app.use('/api/grade-space', gradeSpaceRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/events', eventsRoutes);
 
 app.get('/', (req, res) => res.json({ message: 'Follow Up API' }));
 
